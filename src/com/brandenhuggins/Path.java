@@ -2,8 +2,8 @@ package com.brandenhuggins;
 
 public class Path {
 
-	final static int rows = 20;
-	final static int cols = 20;
+	final static int rows = 13;
+	final static int cols = 30;
 	
 	public static void main(String[] args) {
 		

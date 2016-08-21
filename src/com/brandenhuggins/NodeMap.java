@@ -97,8 +97,9 @@ public class NodeMap{
 			// Check top.
 			if (q.getX() > 0)
 			{
-				if (map[q.getX() - 1][q.getY()].getValue() == '*' ||
-						map[q.getX() - 1][q.getY()].getValue() == '$')
+				if ((map[q.getX() - 1][q.getY()].getValue() == '*' ||
+						map[q.getX() - 1][q.getY()].getValue() == '$') &&
+						!map[q.getX() - 1][q.getY()].equals(q.getParent()))
 				{
 					successors.add(map[q.getX() - 1][q.getY()]);
 				}
@@ -106,8 +107,9 @@ public class NodeMap{
 			// Check right.
 			if (q.getY() < cols - 1)
 			{
-				if (map[q.getX()][q.getY() + 1].getValue() == '*' ||
-						map[q.getX()][q.getY() + 1].getValue() == '$')
+				if ((map[q.getX()][q.getY() + 1].getValue() == '*' ||
+						map[q.getX()][q.getY() + 1].getValue() == '$') &&
+						!map[q.getX()][q.getY() + 1].equals(q.getParent()))
 				{
 					successors.add(map[q.getX()][q.getY() + 1]);
 				}
@@ -115,8 +117,9 @@ public class NodeMap{
 			// Check bottom.
 			if (q.getX() < rows - 1)
 			{
-				if (map[q.getX() + 1][q.getY()].getValue() == '*' ||
-						map[q.getX() + 1][q.getY()].getValue() == '$')
+				if ((map[q.getX() + 1][q.getY()].getValue() == '*' ||
+						map[q.getX() + 1][q.getY()].getValue() == '$') &&
+						!map[q.getX() + 1][q.getY()].equals(q.getParent()))
 				{
 					successors.add(map[q.getX() + 1][q.getY()]);
 				}
@@ -124,8 +127,9 @@ public class NodeMap{
 			// Check left.
 			if (q.getY() > 0)
 			{
-				if (map[q.getX()][q.getY() - 1].getValue() == '*' ||
-						map[q.getX()][q.getY() - 1].getValue() == '$')
+				if ((map[q.getX()][q.getY() - 1].getValue() == '*' ||
+						map[q.getX()][q.getY() - 1].getValue() == '$') &&
+						!map[q.getX()][q.getY() - 1].equals(q.getParent()))
 				{
 					successors.add(map[q.getX()][q.getY() - 1]);
 				}
