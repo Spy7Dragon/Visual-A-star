@@ -1,7 +1,10 @@
 package com.brandenhuggins;
 
-public class Node implements Comparable{
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
+public class Node implements Comparable<Node>, PropertyChangeListener
+{
 	private int x;
 	private int y;
 	private char value;
@@ -65,16 +68,13 @@ public class Node implements Comparable{
 		parent = q;
 	}
 
+	public int compareTo(Node object) {
+		return (int) (this.getF() - object.getF());
+	}
+
 	@Override
-	public int compareTo(Object o) {
-		if (o instanceof Node)
-		{
-			return (int) (this.getF() - (((Node) o).getF()));
-		}
-		else
-		{
-			System.out.println("Comparing invalid Node.");
-			return 34404;
-		}
+	public void propertyChange(PropertyChangeEvent evt) {
+		// TODO Auto-generated method stub
+		
 	}
 }
