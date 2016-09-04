@@ -1,9 +1,9 @@
 package com.brandenhuggins;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
+import java.util.Iterator;
 
-public class Node implements Comparable<Node>, PropertyChangeListener
+public class Node implements Subject, Comparable<Node>
 {
 	private int x;
 	private int y;
@@ -11,6 +11,9 @@ public class Node implements Comparable<Node>, PropertyChangeListener
 	private double g;
 	private double h;
 	private Node parent;
+	
+	private ArrayList<Observer> observers;
+	private ArrayList<?> list;
 	
 	public Node getParent() {
 		return parent;
@@ -41,14 +44,18 @@ public class Node implements Comparable<Node>, PropertyChangeListener
 		h = 0.0;
 		
 		parent = null;
+		
+		observers = new ArrayList<Observer>();
+		list = new ArrayList<Object>();
 	}
 
 	public char getValue() {
 		return value;
 	}
 
-	public void setValue(char value) {
+	public void setValue(char value) throws InterruptedException {
 		this.value = value;
+		notifyObservers();
 	}
 
 	public int getX() {
@@ -73,8 +80,28 @@ public class Node implements Comparable<Node>, PropertyChangeListener
 	}
 
 	@Override
-	public void propertyChange(PropertyChangeEvent evt) {
-		// TODO Auto-generated method stub
-		
+	public void addObserver(Observer o) {
+		observers.add(o);
+	}
+
+	@Override
+	public void removeObserver(Observer o) {
+		observers.remove(o);
+	}
+	
+	public Iterator<?> iterator()
+	{
+		return list.iterator();
+	}
+	
+	
+	private void notifyObservers() throws InterruptedException
+	{
+		Iterator<Observer> i = observers.iterator();
+		while (i.hasNext())
+		{
+			Observer o = (Observer) i.next();
+			o.update(this);
+		}
 	}
 }

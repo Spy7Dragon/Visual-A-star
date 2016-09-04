@@ -3,6 +3,7 @@ package com.brandenhuggins;
 import java.util.ArrayList;
 import java.util.PriorityQueue;
 import java.util.Queue;
+import java.util.concurrent.TimeUnit;
 
 public class NodeMap{
 
@@ -13,6 +14,8 @@ public class NodeMap{
 
 	private Node start;
 	private Node finish;
+	
+	final static long SLEEPTIME = 50;
 
 	NodeMap(int theRows, int theCols)
 	{
@@ -29,7 +32,7 @@ public class NodeMap{
 		{
 			for (int j = 0; j < cols; j++)
 			{
-				int random = (int) (Math.random() * 4);
+				int random = (int) (Math.random() * 2.85);
 				if (random == 1)
 				{
 					Node newNode = new Node(i, j, '#');
@@ -46,7 +49,7 @@ public class NodeMap{
 		
 	}
 
-	public void assignRandom( char c) {
+	public void assignRandom( char c) throws InterruptedException {
 		boolean assigned = false;
 
 		while (!assigned)
@@ -82,7 +85,7 @@ public class NodeMap{
 		}
 	}
 
-	public void traverse() {
+	public void traverse() throws InterruptedException {
 		Queue<Node> nodeList = new PriorityQueue<Node>();
 		ArrayList<Node> closedList = new ArrayList<Node>();
 		nodeList.add(start);
@@ -98,8 +101,7 @@ public class NodeMap{
 			if (q.getX() > 0)
 			{
 				if ((map[q.getX() - 1][q.getY()].getValue() == '*' ||
-						map[q.getX() - 1][q.getY()].getValue() == '$') &&
-						!map[q.getX() - 1][q.getY()].equals(q.getParent()))
+						map[q.getX() - 1][q.getY()].getValue() == '$'))
 				{
 					successors.add(map[q.getX() - 1][q.getY()]);
 				}
@@ -108,8 +110,7 @@ public class NodeMap{
 			if (q.getY() < cols - 1)
 			{
 				if ((map[q.getX()][q.getY() + 1].getValue() == '*' ||
-						map[q.getX()][q.getY() + 1].getValue() == '$') &&
-						!map[q.getX()][q.getY() + 1].equals(q.getParent()))
+						map[q.getX()][q.getY() + 1].getValue() == '$'))
 				{
 					successors.add(map[q.getX()][q.getY() + 1]);
 				}
@@ -118,8 +119,7 @@ public class NodeMap{
 			if (q.getX() < rows - 1)
 			{
 				if ((map[q.getX() + 1][q.getY()].getValue() == '*' ||
-						map[q.getX() + 1][q.getY()].getValue() == '$') &&
-						!map[q.getX() + 1][q.getY()].equals(q.getParent()))
+						map[q.getX() + 1][q.getY()].getValue() == '$'))
 				{
 					successors.add(map[q.getX() + 1][q.getY()]);
 				}
@@ -128,8 +128,7 @@ public class NodeMap{
 			if (q.getY() > 0)
 			{
 				if ((map[q.getX()][q.getY() - 1].getValue() == '*' ||
-						map[q.getX()][q.getY() - 1].getValue() == '$') &&
-						!map[q.getX()][q.getY() - 1].equals(q.getParent()))
+						map[q.getX()][q.getY() - 1].getValue() == '$'))
 				{
 					successors.add(map[q.getX()][q.getY() - 1]);
 				}
@@ -153,6 +152,9 @@ public class NodeMap{
 					return;
 				}
 
+				// Create Remove list
+				ArrayList<Node> toRemove = new ArrayList<Node>();
+				
 				for (Node open: nodeList)
 				{
 					if (open.getX() == successor.getX() &&
@@ -161,7 +163,10 @@ public class NodeMap{
 						if (open.getF() < g + successor.getH())
 						{
 							add = false;
-							break;
+						}
+						else
+						{
+							toRemove.add(open);
 						}
 					}
 				}
@@ -179,6 +184,13 @@ public class NodeMap{
 					}
 				}
 
+				// Remove unwanted nodes
+				for (Node unwanted: toRemove)
+				{
+					nodeList.remove(unwanted);
+					closedList.add(unwanted);
+				}
+				
 				if (add)
 				{			
 					successor.setG(g);
@@ -192,7 +204,7 @@ public class NodeMap{
 		}
 	}
 	
-	private void clearTrail()
+	private void clearTrail() throws InterruptedException
 	{
 		for (int i = 0; i < rows; i++)
 		{
@@ -206,7 +218,7 @@ public class NodeMap{
 		}
 	}
 
-	private void printTrail(Node success) {
+	private void printTrail(Node success) throws InterruptedException {
 
 		Node trailNode = success;
 
@@ -223,6 +235,8 @@ public class NodeMap{
 			}	
 			trailNode = trailNode.getParent();
 		}
+		
+		TimeUnit.MILLISECONDS.sleep(SLEEPTIME);
 	}
 
 	private double difference(Node node, Node node2) {

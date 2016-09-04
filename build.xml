@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+<project name="Blue4" default="jar"
+	xmlns:ivy="antlib:org.apache.ivy.ant" 
+	xmlns:jacoco="antlib:org.jacoco.ant">
+	
+	<property file="build.properties" />
+	
+	<property name="main.dir" value="src" />
+	<property name="test.dir" value="test" />
+	<property name="build.dir" value ="target" />
+	<property name="build.main.dir" value="target/classes" />
+	<property name="build.test.dir" value="target/test-classes" />
+	<property name="reports.dir" value="target/reports" />
+	<property name="lib.tools.dir" value="" />
+	<property name="lib.sources.dir" value="" />
+	
+	<path id="libs">
+		<fileset dir="Blue4/lib" includes="**/*.jar" />
+	</path>
+		
+	<path id="main.path">
+		<pathelement path="${main.dir}" />
+	</path>
+	
+	<path id="test.path">
+		<path refid="main.path" />
+		<pathelement path="${build.main.dir}" />
+	</path>
+	
+	<path id="junit.path">
+		<path refid="test.path" />
+		<pathelement path="${build.test.dir}" /> 
+		<pathelement path="${lib.tools.dir}" />
+	</path>
+		
+	<target name="build">
+		<echo>Building Java Classes.</echo>
+		<mkdir dir="${build.main.dir}"/>
+		<javac includeantruntime="true" srcdir="${main.dir}" destdir="${build.main.dir}" source="1.7" target="1.7">
+			<classpath refid="main.path" />
+		</javac>
+	</target>
+	
+	<target name="buildtests" depends="build">
+		<echo>Building Java Test Classes.</echo>
+		<mkdir dir="${build.test.dir}"/>
+		<javac includeantruntime="true" srcdir="${test.dir}" destdir="${build.test.dir}" source="1.7" target="1.7">
+			<classpath refid="test.path" />
+		</javac>
+	</target>
+	
+	<target name="rebuild" depends="clean">
+		<echo>Rebuilding the project</echo>
+		<antcall target="build" />
+	</target>
+	
+	<target name="clean">
+		<echo>Cleaning the project</echo>
+		<delete dir="lib"/>
+		<delete>
+			<fileset dir="${build.dir}" />
+		</delete>
+	</target>		
+	
+	<target name="jar" depends="build">
+		<echo>Creating a .jar deliverable</echo>
+		<jar destfile="${build.dir}/Astar.jar" 
+		basedir="${build.main.dir}" >
+			<manifest>
+				<attribute name="Main-Class" value="com.brandenhuggins.StarBoard" />
+				<attribute name="Class-Path" value="${build.main.dir}" />
+			</manifest>
+		</jar>
+	</target>
+
+</project>
